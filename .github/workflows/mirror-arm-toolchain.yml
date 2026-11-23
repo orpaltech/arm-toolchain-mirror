@@ -1,0 +1,55 @@
+name: Mirror Official Arm Toolchain
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Arm Toolchain Version'
+        required: true
+        default: '14.2.rel1'
+        type: choice
+        options:
+          - '14.2.rel1'
+          - '11.2-2022.02'
+      filename:
+        description: 'Exact Archive Filename'
+        required: true
+        default: 'arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+        type: choice
+        options:
+          - 'gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf.tar.xz'
+          - 'gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz'
+          - 'arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz'
+          - 'arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Official Arm Toolchain & Checksum
+        run: |
+          BASE_URL="https://arm.com{{ inputs.version }}/binrel"
+          FILE="${{ inputs.filename }}"
+          
+          echo "Downloading ${FILE}..."
+          curl -fL --retry 3 "${BASE_URL}/${FILE}" -o "${FILE}"
+          curl -fL --retry 3 "${BASE_URL}/${FILE}.sha256asc" -o "${FILE}.sha256asc"
+
+      - name: Verify SHA256 Checksum
+        run: |
+          FILE="${{ inputs.filename }}"
+          EXPECTED_HASH=$(grep -oE '[a-f0-9]{64}' "${FILE}.sha256asc" | head -n 1)
+          echo "${EXPECTED_HASH}  ${FILE}" | sha256sum -c -
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "toolchains"
+          name: "Official Arm GNU Toolchains"
+          body: "Unmodified official Arm GNU Toolchains mirrored from ://arm.com (SHA256 verified)."
+          files: |
+            ${{ inputs.filename }}
+            ${{ inputs.filename }}.sha256asc
