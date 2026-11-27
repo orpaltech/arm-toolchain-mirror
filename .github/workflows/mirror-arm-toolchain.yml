@@ -6,7 +6,7 @@ on:
       version:
         description: 'Arm Toolchain Version'
         required: true
-        default: '14.2.rel1'
+        default: '15.3.rel2'
         type: choice
         options:
           - '15.3.rel2'
