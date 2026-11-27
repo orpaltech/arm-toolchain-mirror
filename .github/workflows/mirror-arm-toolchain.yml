@@ -9,18 +9,24 @@ on:
         default: '14.2.rel1'
         type: choice
         options:
+          - '15.3.rel2'
           - '14.2.rel1'
-          - '11.2-2022.02'
+          - '13.3.rel1'
+          - '11.3.rel1'
       filename:
         description: 'Exact Archive Filename'
         required: true
-        default: 'arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+        default: 'arm-gnu-toolchain-15.3.rel2-x86_64-aarch64-none-linux-gnu.tar.xz'
         type: choice
         options:
-          - 'gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf.tar.xz'
-          - 'gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz'
-          - 'arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz'
-          - 'arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+          - 'arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz'
+          - 'arm-gnu-toolchain-11.3.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+          - 'arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz'
+          - 'arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+          - 'arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz'
+          - 'arm-gnu-toolchain-14.3.rel1-x86_64-aarch64-none-linux-gnu.tar.xz'
+          - 'arm-gnu-toolchain-15.3.rel2-x86_64-arm-none-linux-gnueabihf.tar.xz'
+          - 'arm-gnu-toolchain-15.3.rel2-x86_64-aarch64-none-linux-gnu.tar.xz'
 
 permissions:
   contents: write
@@ -31,7 +37,7 @@ jobs:
     steps:
       - name: Download Official Arm Toolchain & Checksum
         run: |
-          BASE_URL="https://developer.arm.com/-/media/Files/downloads/gnu/${{ inputs.version }}/binrel"
+          BASE_URL="https://gitlab.arm.com/api/v4/projects/tooling%2Fgnu-toolchains-for-arm/packages/generic/gnu-toolchain/${{ inputs.version }}"
           FILE="${{ inputs.filename }}"
           
           echo "Downloading ${FILE}..."
