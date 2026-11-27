@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Download Official Arm Toolchain & Checksum
         run: |
-          BASE_URL="https://developer.arm.com/-/media/Files/downloads/gnu/{{ inputs.version }}/binrel"
+          BASE_URL="https://developer.arm.com/-/media/Files/downloads/gnu/${{ inputs.version }}/binrel"
           FILE="${{ inputs.filename }}"
           
           echo "Downloading ${FILE}..."
